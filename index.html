@@ -5,38 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Receipt Generator</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #f9f9f9; }
-    input, textarea { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #ffffff; }
+    textarea { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
     .button { padding: 12px; background-color: #2563eb; color: white; border: none; font-size: 16px; cursor: pointer; width: 100%; }
-    .receipt { margin-top: 30px; padding: 20px; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; }
-    .success { color: green; font-size: 28px; font-weight: bold; text-align: center; }
+    .receipt { margin-top: 30px; padding: 20px; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .success { color: #00b386; font-size: 32px; font-weight: bold; text-align: center; margin-top: 10px; }
     .center { text-align: center; }
-    .line { border-top: 1px solid #ddd; margin: 10px 0; }
-    .note { font-size: 12px; text-align: center; color: #666; margin-top: 10px; }
-    .razor-logo { font-size: 12px; color: #2563eb; }
-    #captureArea { background: white; padding: 20px; border-radius: 8px; }
+    .line { border-top: 1px solid #ddd; margin: 20px 0; }
+    .note { font-size: 13px; text-align: left; color: #444; margin-top: 10px; background: #f8f8f8; padding: 10px; border-radius: 6px; }
+    .razor-logo { font-size: 13px; color: #2563eb; margin-bottom: -10px; }
+    #captureArea { background: white; padding: 20px; border-radius: 8px; font-size: 15px; }
+    .highlight { font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <h2>Generate Razorpay Style Receipt</h2>
-  <textarea id="rawInput" rows="3" placeholder="Paste full line here like: S250405190102440C4B0B\t05 Apr 2025 7:01:02 PM\tPaid for UPI PAYMENT account no. 9079376761-2@ybl amount 1030.00"></textarea>
+  <h2 class="center">Receipt Generator</h2>
+  <textarea id="rawInput" rows="3" placeholder="Paste: S250405190102440C4B0B\t05 Apr 2025 7:01:02 PM\tPaid for UPI PAYMENT account no. 9079376761-2@ybl amount 1030.00"></textarea>
   <button class="button" onclick="generateReceipt()">Generate Receipt</button>
 
   <div id="captureArea" class="receipt" style="display:none;">
     <div class="center">
       <p class="razor-logo">Business Banking Powered by <strong>Razorpay</strong></p>
       <h2>I Digi pay/Razorpay</h2>
-      <div style="font-size: 40px; color: green;">✔️</div>
+      <div style="font-size: 40px; color: #00b386;">✔️</div>
       <div class="success">₹<span id="outAmount"></span></div>
       <div class="center" style="color: grey;">Received Successfully</div>
     </div>
     <div class="line"></div>
-    <p><strong>Transaction ID</strong> <span id="outTransactionId"></span></p>
-    <p><strong>Paid for</strong> <span id="outDateTime"></span></p>
-    <p><strong>Account No.</strong> <span id="outUpiId"></span></p>
-    <p><strong>Paid via</strong> I Digi pay/Razorpay</p>
-    <p><strong>Amount</strong> ₹<span id="noteAmount"></span></p>
+    <p><span class="highlight">Transaction ID</span> <span id="outTransactionId"></span></p>
+    <p><span class="highlight">Paid for</span> <span id="outDateTime"></span></p>
+    <p><span class="highlight">Account No.</span> <span id="outUpiId"></span></p>
+    <p><span class="highlight">Paid via</span> I Digi pay/Razorpay</p>
+    <p><span class="highlight">Amount</span> ₹<span id="noteAmount"></span></p>
     <div class="line"></div>
     <div class="note">
       You have received ₹<span id="noteAmount2"></span> from I Digi pay/Razorpay. Please find details below.<br>
@@ -48,7 +49,7 @@
   <script>
     function generateReceipt() {
       const raw = document.getElementById('rawInput').value.trim();
-      const match = raw.match(/(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+.*account no\. (\S+) amount (\d+\.\d{2})/);
+      const match = raw.match(/(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+.*account no\. (\S+) amount (\d+(\.\d{2})?)/);
       if (!match) {
         alert("Invalid format. Please paste in the correct format.");
         return;
@@ -63,18 +64,19 @@
       document.getElementById('noteAmount2').innerText = amount;
       document.getElementById('captureArea').style.display = 'block';
 
-      // Wait a bit and convert to image
+      // Wait and convert to image
       setTimeout(() => {
-        html2canvas(document.querySelector("#captureArea")).then(canvas => {
+        html2canvas(document.querySelector("#captureArea"), { scale: 2 }).then(canvas => {
           canvas.toBlob(blob => {
             const item = new ClipboardItem({ 'image/png': blob });
             navigator.clipboard.write([item]);
-            alert("Receipt image copied to clipboard!");
+            alert("✅ Receipt image copied to clipboard!");
           });
         });
-      }, 500);
+      }, 600);
     }
   </script>
 
 </body>
 </html>
+
