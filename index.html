@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Receipt Generator</title>
+  <style>
+    body { font-family: sans-serif; background: #1a1a1a; color: #fff; padding: 20px; text-align: center; }
+    .receipt { background: #272727; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; margin: auto; }
+    input, button { margin: 10px 0; padding: 10px; width: 90%; border-radius: 5px; border: none; }
+    button { background: #157bc6; color: white; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Generate Receipt</h2>
+  <input type="text" id="txn" placeholder="Transaction ID" />
+  <input type="text" id="date" placeholder="Date & Time" />
+  <input type="number" id="amount" placeholder="Amount" />
+  <button onclick="generate()">Generate</button>
+
+  <div class="receipt" id="receipt" style="display:none;">
+    <h3>Business Banking By I Pay Digi powered by RazorpayX</h3>
+    <p>Transaction ID: <span id="outTxn"></span></p>
+    <p>Date: <span id="outDate"></span></p>
+    <p>Amount: ₹<span id="outAmount"></span></p>
+  </div>
+
+  <script>
+    function generate() {
+      document.getElementById("outTxn").textContent = document.getElementById("txn").value;
+      document.getElementById("outDate").textContent = document.getElementById("date").value;
+      document.getElementById("outAmount").textContent = document.getElementById("amount").value;
+      document.getElementById("receipt").style.display = "block";
+    }
+  </script>
+</body>
+</html>
