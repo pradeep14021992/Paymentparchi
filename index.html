@@ -1,73 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Receipt Generator</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #1a1a1a;
-      color: #fff;
-      padding: 20px;
-      margin: 0;
-    }
-    .container {
-      max-width: 400px;
-      margin: auto;
-      text-align: center;
-    }
-    input, button {
-      width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
-    }
-    button {
-      background: #157bc6;
-      color: white;
-      cursor: pointer;
-    }
-    .receipt {
-      background: #272727;
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 20px;
-      text-align: left;
-      display: none;
-    }
-    .receipt h3 {
-      text-align: center;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    input { width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box; }
+    .button { padding: 10px 15px; background-color: #2563eb; color: white; border: none; cursor: pointer; width: 100%; }
+    .receipt { margin-top: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .success { color: green; font-size: 24px; font-weight: bold; text-align: center; }
+    .center { text-align: center; }
+    .line { border-top: 1px solid #ddd; margin: 10px 0; }
+    .note { font-size: 12px; text-align: center; color: #666; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Receipt Generator</h2>
-    <input type="text" id="txn" placeholder="Transaction ID" />
-    <input type="text" id="date" placeholder="Date & Time" />
-    <input type="number" id="amount" placeholder="Amount" />
-    <button onclick="generate()">Generate Receipt</button>
 
-    <div class="receipt" id="receipt">
-      <h3>Business Banking By I Pay Digi powered by RazorpayX</h3>
-      <p><strong>Sender:</strong> Pradeep Kumar Baghel</p>
-      <p><strong>Transaction ID:</strong> <span id="outTxn"></span></p>
-      <p><strong>Date:</strong> <span id="outDate"></span></p>
-      <p><strong>Amount:</strong> ₹<span id="outAmount"></span></p>
+  <h2>Generate Razorpay Style Receipt</h2>
+  <input type="text" id="transactionId" placeholder="Transaction ID">
+  <input type="text" id="dateTime" placeholder="Date & Time">
+  <input type="text" id="upiId" placeholder="Account No. / UPI ID">
+  <input type="text" id="amount" placeholder="Amount">
+  <button class="button" onclick="generateReceipt()">Generate Receipt</button>
+
+  <div id="receipt" class="receipt" style="display:none;">
+    <div class="center">
+      <p style="font-size: 12px; color: #2563eb;">Business Banking Powered by</p>
+      <h3>I Digi pay / Razorpay</h3>
+    </div>
+    <div class="success">₹<span id="outAmount"></span></div>
+    <div class="center">Paid Successfully</div>
+    <div class="line"></div>
+    <p><strong>Transaction ID:</strong> <span id="outTransactionId"></span></p>
+    <p><strong>Date:</strong> <span id="outDateTime"></span></p>
+    <p><strong>Paid For:</strong> UPI Payment</p>
+    <p><strong>Account No. / UPI ID:</strong> <span id="outUpiId"></span></p>
+    <p><strong>Paid via:</strong> I Digi pay / Razorpay</p>
+    <div class="line"></div>
+    <div class="note">
+      You have received ₹<span id="noteAmount"></span> from I Digi pay / Razorpay. Please find details below. <br>
+      If you haven't received the amount, kindly contact your bank with the Transaction ID mentioned above.
     </div>
   </div>
 
   <script>
-    function generate() {
-      document.getElementById("outTxn").textContent = document.getElementById("txn").value;
-      document.getElementById("outDate").textContent = document.getElementById("date").value;
-      document.getElementById("outAmount").textContent = document.getElementById("amount").value;
-      document.getElementById("receipt").style.display = "block";
+    function generateReceipt() {
+      const transactionId = document.getElementById('transactionId').value;
+      const dateTime = document.getElementById('dateTime').value;
+      const upiId = document.getElementById('upiId').value;
+      const amount = document.getElementById('amount').value;
+
+      document.getElementById('outTransactionId').innerText = transactionId;
+      document.getElementById('outDateTime').innerText = dateTime;
+      document.getElementById('outUpiId').innerText = upiId;
+      document.getElementById('outAmount').innerText = amount;
+      document.getElementById('noteAmount').innerText = amount;
+      document.getElementById('receipt').style.display = 'block';
     }
   </script>
+
 </body>
 </html>
+
 
