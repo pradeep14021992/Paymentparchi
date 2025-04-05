@@ -5,17 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Receipt Generator</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #ffffff; }
-    textarea { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
-    .button { padding: 12px; background-color: #2563eb; color: white; border: none; font-size: 16px; cursor: pointer; width: 100%; }
-    .receipt { margin-top: 30px; padding: 20px; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .success { color: #00b386; font-size: 32px; font-weight: bold; text-align: center; margin-top: 10px; }
-    .center { text-align: center; }
-    .line { border-top: 1px solid #ddd; margin: 20px 0; }
-    .note { font-size: 13px; text-align: left; color: #444; margin-top: 10px; background: #f8f8f8; padding: 10px; border-radius: 6px; }
-    .razor-logo { font-size: 13px; color: #2563eb; margin-bottom: -10px; }
-    #captureArea { background: white; padding: 20px; border-radius: 8px; font-size: 15px; }
-    .highlight { font-weight: bold; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    .button {
+      padding: 12px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .receipt {
+      margin-top: 30px;
+      padding: 0;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 0 2px #e5e7eb;
+      font-family: 'Inter', sans-serif;
+    }
+    .receipt-header {
+      background-color: #0f1d3b;
+      padding: 20px;
+      text-align: center;
+    }
+    .receipt-header img {
+      max-height: 50px;
+    }
+    .receipt-body {
+      padding: 24px;
+    }
+    .success {
+      color: #00b386;
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+      margin: 16px 0 4px;
+    }
+    .center {
+      text-align: center;
+    }
+    .line {
+      border-top: 1px solid #ddd;
+      margin: 20px 0;
+    }
+    .note {
+      font-size: 13px;
+      text-align: left;
+      color: #444;
+      margin-top: 10px;
+      background: #f8f8f8;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    .row-label {
+      font-weight: 600;
+      display: inline-block;
+      width: 130px;
+    }
+    .receipt h2 {
+      margin: 12px 0 0;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -25,23 +90,24 @@
   <button class="button" onclick="generateReceipt()">Generate Receipt</button>
 
   <div id="captureArea" class="receipt" style="display:none;">
-    <div class="center">
-      <p class="razor-logo">Business Banking Powered by <strong>Razorpay</strong></p>
-      <h2>I Digi pay/Razorpay</h2>
-      <div style="font-size: 40px; color: #00b386;">✔️</div>
+    <div class="receipt-header">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Razorpay_logo.svg/2560px-Razorpay_logo.svg.png" alt="RazorpayX Logo">
+      <h2 style="color:white; margin-top: 12px;">I Digi pay/Razorpay</h2>
+    </div>
+    <div class="receipt-body">
       <div class="success">₹<span id="outAmount"></span></div>
       <div class="center" style="color: grey;">Received Successfully</div>
-    </div>
-    <div class="line"></div>
-    <p><span class="highlight">Transaction ID</span> <span id="outTransactionId"></span></p>
-    <p><span class="highlight">Paid for</span> <span id="outDateTime"></span></p>
-    <p><span class="highlight">Account No.</span> <span id="outUpiId"></span></p>
-    <p><span class="highlight">Paid via</span> I Digi pay/Razorpay</p>
-    <p><span class="highlight">Amount</span> ₹<span id="noteAmount"></span></p>
-    <div class="line"></div>
-    <div class="note">
-      You have received ₹<span id="noteAmount2"></span> from I Digi pay/Razorpay. Please find details below.<br>
-      If you haven’t received the amount, kindly contact your bank with the transaction ID mentioned below.
+      <div class="line"></div>
+      <p><span class="row-label">Transaction ID</span> <span id="outTransactionId"></span></p>
+      <p><span class="row-label">Paid for</span> <span id="outDateTime"></span></p>
+      <p><span class="row-label">Account No.</span> <span id="outUpiId"></span></p>
+      <p><span class="row-label">Paid via</span> I Digi pay/Razorpay</p>
+      <p><span class="row-label">Amount</span> ₹<span id="noteAmount"></span></p>
+      <div class="line"></div>
+      <div class="note">
+        You have received ₹<span id="noteAmount2"></span> from I Digi pay/Razorpay. Please find details below.<br>
+        If you haven’t received the amount, kindly contact your bank with the transaction ID mentioned below.
+      </div>
     </div>
   </div>
 
@@ -67,13 +133,12 @@
       document.getElementById('noteAmount2').innerText = amount;
       document.getElementById('captureArea').style.display = 'block';
 
-      // Auto-generate image & copy to clipboard
+      // Auto-generate image & copy to clipboard (silent)
       setTimeout(() => {
         html2canvas(document.querySelector("#captureArea"), { scale: 2 }).then(canvas => {
           canvas.toBlob(blob => {
             const item = new ClipboardItem({ 'image/png': blob });
             navigator.clipboard.write([item]);
-            alert("✅ Receipt image copied to clipboard!");
           });
         });
       }, 400);
