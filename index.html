@@ -21,7 +21,7 @@
 <body>
 
   <h2 class="center">Receipt Generator</h2>
-  <textarea id="rawInput" rows="3" placeholder="Paste: S250405190102440C4B0B\t05 Apr 2025 7:01:02 PM\tPaid for UPI PAYMENT account no. 9079376761-2@ybl amount 1030.00"></textarea>
+  <textarea id="rawInput" rows="3" placeholder="Paste here: S250405190102440C4B0B\t05 Apr 2025 7:01:02 PM\tPaid for UPI PAYMENT account no. 9079376761-2@ybl amount 1030.00"></textarea>
   <button class="button" onclick="generateReceipt()">Generate Receipt</button>
 
   <div id="captureArea" class="receipt" style="display:none;">
@@ -49,11 +49,14 @@
   <script>
     function generateReceipt() {
       const raw = document.getElementById('rawInput').value.trim();
-      const match = raw.match(/(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+.*account no\. (\S+) amount (\d+(\.\d{2})?)/);
+      const regex = /(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+Paid for UPI PAYMENT account no\. ([^\s]+) amount (\d+(\.\d{2})?)/i;
+      const match = raw.match(regex);
+
       if (!match) {
-        alert("Invalid format. Please paste in the correct format.");
+        alert("❌ Format error! Please check your pasted line.");
         return;
       }
+
       const [, transactionId, dateTime, upiId, amount] = match;
 
       document.getElementById('outTransactionId').innerText = transactionId;
@@ -64,7 +67,7 @@
       document.getElementById('noteAmount2').innerText = amount;
       document.getElementById('captureArea').style.display = 'block';
 
-      // Wait and convert to image
+      // Auto-generate image & copy to clipboard
       setTimeout(() => {
         html2canvas(document.querySelector("#captureArea"), { scale: 2 }).then(canvas => {
           canvas.toBlob(blob => {
@@ -73,10 +76,9 @@
             alert("✅ Receipt image copied to clipboard!");
           });
         });
-      }, 600);
+      }, 400);
     }
   </script>
 
 </body>
 </html>
-
