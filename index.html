@@ -115,13 +115,11 @@
   <script>
     function generateReceipt() {
       const raw = document.getElementById('rawInput').value.trim();
-      const regex = /(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+Paid for UPI PAYMENT account no\. ([^\s]+) amount (\d+(\.\d{2})?)/i;
-      const match = raw.match(regex);
+      const cleaned = raw.replace(/\s{2,}/g, ' '); // Replace multiple spaces/tabs with single space
+      const regex = /^(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+Paid for UPI PAYMENT account no\. ([^\s]+) amount (\d+(\.\d{2})?)$/i;
+      const match = cleaned.match(regex);
 
-      if (!match) {
-        alert("❌ Format error! Please check your pasted line.");
-        return;
-      }
+      if (!match) return;
 
       const [, transactionId, dateTime, upiId, amount] = match;
 
@@ -133,7 +131,6 @@
       document.getElementById('noteAmount2').innerText = amount;
       document.getElementById('captureArea').style.display = 'block';
 
-      // Auto-generate image & copy to clipboard (silent)
       setTimeout(() => {
         html2canvas(document.querySelector("#captureArea"), { scale: 2 }).then(canvas => {
           canvas.toBlob(blob => {
