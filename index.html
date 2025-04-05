@@ -115,8 +115,8 @@
   <script>
     function generateReceipt() {
       const raw = document.getElementById('rawInput').value.trim();
-      const cleaned = raw.replace(/\s{2,}/g, ' '); // Replace multiple spaces/tabs with single space
-      const regex = /^(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+Paid for UPI PAYMENT account no\. ([^\s]+) amount (\d+(\.\d{2})?)$/i;
+      const cleaned = raw.replace(/\s{2,}/g, ' ');
+      const regex = /^(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+Paid for UPI PAYMENT account no\. ([^\s]+) amount (\d+(\.\d{2})?)\|?$/i;
       const match = cleaned.match(regex);
 
       if (!match) return;
