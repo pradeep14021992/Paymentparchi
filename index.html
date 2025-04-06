@@ -1,146 +1,207 @@
-S250405190000470B0F75	05 Apr 2025 7:00:00 PM	Paid for UPI PAYMENT account no. dpk00rwt-2@okaxis amount 3219<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Receipt Generator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Confirmation Receipt</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Roboto', sans-serif;
+      background-color: #1a1a1a;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+    .top-button {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .top-button button {
+      background-color: #4caf50;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .receipt {
+      background-color: #272727;
+      width: 360px;
       padding: 20px;
-      max-width: 600px;
-      margin: auto;
-      background: #ffffff;
+      border-radius: 18px;
+      box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.6),
+        0 2px 10px rgba(21, 123, 198, 0.4);
+      text-align: center;
+      position: relative;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .receipt:hover {
+      transform: scale(1.01);
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.7),
+        0 4px 12px rgba(21, 123, 198, 0.6);
+    }
+    .header {
+      background-color: #157bc6;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .check-circle {
+      width: 40px;
+      height: 40px;
+      background-color: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto;
+    }
+    .details {
+      text-align: left;
+      margin-top: 15px;
+    }
+    .details div {
+      margin-bottom: 8px;
+    }
+    button {
+      background-color: #157bc6;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      float: right;
     }
     textarea {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    .button {
-      padding: 12px;
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
-    }
-    .receipt {
-      margin-top: 30px;
-      padding: 0;
-      background: #ffffff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 0 2px #e5e7eb;
-      font-family: 'Inter', sans-serif;
-    }
-    .receipt-header {
-      background-color: #0f1d3b;
-      padding: 20px;
-      text-align: center;
-    }
-    .receipt-header img {
-      max-height: 50px;
-    }
-    .receipt-body {
-      padding: 24px;
-    }
-    .success {
-      color: #00b386;
-      font-size: 32px;
-      font-weight: bold;
-      text-align: center;
-      margin: 16px 0 4px;
-    }
-    .center {
-      text-align: center;
-    }
-    .line {
-      border-top: 1px solid #ddd;
-      margin: 20px 0;
-    }
-    .note {
-      font-size: 13px;
-      text-align: left;
-      color: #444;
+      border-radius: 5px;
+      padding: 8px;
+      box-sizing: border-box;
       margin-top: 10px;
-      background: #f8f8f8;
-      padding: 10px;
-      border-radius: 6px;
     }
-    .row-label {
-      font-weight: 600;
-      display: inline-block;
-      width: 130px;
+    .input-section {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
     }
-    .receipt h2 {
-      margin: 12px 0 0;
-      font-weight: 600;
+    .footer-text {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #ccc;
+      text-align: left;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
 
-  <h2 class="center">Receipt Generator</h2>
-  <textarea id="rawInput" rows="3" placeholder="Paste here: S250405190102440C4B0B\t05 Apr 2025 7:01:02 PM\tPaid for UPI PAYMENT account no. 9079376761-2@ybl amount 1030.00"></textarea>
-  <button class="button" onclick="generateReceipt()">Generate Receipt</button>
-
-  <div id="captureArea" class="receipt" style="display:none;">
-    <div class="receipt-header">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Razorpay_logo.svg/2560px-Razorpay_logo.svg.png" alt="RazorpayX Logo">
-      <h2 style="color:white; margin-top: 12px;">I Digi pay/Razorpay</h2>
-    </div>
-    <div class="receipt-body">
-      <div class="success">₹<span id="outAmount"></span></div>
-      <div class="center" style="color: grey;">Received Successfully</div>
-      <div class="line"></div>
-      <p><span class="row-label">Transaction ID</span> <span id="outTransactionId"></span></p>
-      <p><span class="row-label">Paid for</span> <span id="outDateTime"></span></p>
-      <p><span class="row-label">Account No.</span> <span id="outUpiId"></span></p>
-      <p><span class="row-label">Paid via</span> I Digi pay/Razorpay</p>
-      <p><span class="row-label">Amount</span> ₹<span id="noteAmount"></span></p>
-      <div class="line"></div>
-      <div class="note">
-        You have received ₹<span id="noteAmount2"></span> from I Digi pay/Razorpay. Please find details below.<br>
-        If you haven’t received the amount, kindly contact your bank with the transaction ID mentioned below.
-      </div>
-    </div>
+  <div class="top-button">
+    <button onclick="generateMobileNumber()">Generate Mobile Number</button>
   </div>
 
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <div class="receipt" id="receipt">
+    <div class="header">Business Banking By I Pay Digi powered by RazorpayX</div>
+    <div class="check-circle">✓</div>
+    <h2>₹<span id="amount">0.00</span></h2>
+    <p>Received Successfully</p>
+
+    <div class="details">
+      <div><strong>Sender:</strong> <span id="sender">Pradeep Kumar Baghel</span></div>
+      <div><strong>Amount:</strong> ₹<span id="amount-detail">0.00</span></div>
+      <div><strong>Transaction Id:</strong> <span id="transaction-id">N/A</span></div>
+      <div><strong>Account:</strong> <span id="account-no">N/A</span></div>
+      <div><strong>Paid via:</strong> UPI</div>
+      <div><strong>Paid on:</strong> <span id="timestamp">N/A</span></div>
+    </div>
+
+    <div class="footer-text" id="footer-text"></div>
+  </div>
+
+  <div class="input-section" style="position: absolute; bottom: 20px; right: 20px; width: 360px;">
+    <textarea id="transactionText" placeholder="Paste transaction details here"></textarea>
+    <button onclick="generateReceipt()">Generate</button>
+  </div>
+
   <script>
     function generateReceipt() {
-      const raw = document.getElementById('rawInput').value.trim();
-      const cleaned = raw.replace(/[\t\n]+/g, ' ').replace(/\s{2,}/g, ' ');
-      const regex = /^(\S+)\s+(\d{2} \w+ \d{4} [\d:APM]+)\s+Paid for UPI PAYMENT account no\. ([^\s]+) amount (\d+(\.\d{2})?)\|?$/i;
-      const match = cleaned.match(regex);
+      const inputText = document.getElementById('transactionText').value;
+      const cleanText = inputText.replace(/[\|,\t\n]+/g, ' ').replace(/\s+/g, ' ');
 
-      if (!match) return;
+      const amountRegex = /(?:amount\s*)?₹?\s*([0-9]+\.\d{2})/i;
+      const dateRegex = /\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}(?:\s+\d{1,2}:\d{2}:\d{2}\s*[APMapm]{2})?/;
+      const txnIdRegex = /\b([A-Z0-9]{10,25})\b/;
+      const accountRegex = /(?:account(?:\s*no\.?|:)?|UPI\s*ID\s*:?)[\s]*([0-9a-zA-Z_.-]+@[a-zA-Z]+)/i;
 
-      const [, transactionId, dateTime, upiId, amount] = match;
+      const amountMatch = cleanText.match(amountRegex);
+      const dateMatch = cleanText.match(dateRegex);
+      const txnMatch = cleanText.match(txnIdRegex);
+      const accountMatch = cleanText.match(accountRegex);
 
-      document.getElementById('outTransactionId').innerText = transactionId;
-      document.getElementById('outDateTime').innerText = dateTime;
-      document.getElementById('outUpiId').innerText = upiId;
-      document.getElementById('outAmount').innerText = amount;
-      document.getElementById('noteAmount').innerText = amount;
-      document.getElementById('noteAmount2').innerText = amount;
-      document.getElementById('captureArea').style.display = 'block';
+      if (amountMatch) {
+        document.getElementById('amount').textContent = amountMatch[1];
+        document.getElementById('amount-detail').textContent = amountMatch[1];
+      }
 
-      setTimeout(() => {
-        html2canvas(document.querySelector("#captureArea"), { scale: 2 }).then(canvas => {
-          canvas.toBlob(blob => {
-            const item = new ClipboardItem({ 'image/png': blob });
-            navigator.clipboard.write([item]);
-          });
+      if (txnMatch) {
+        document.getElementById('transaction-id').textContent = txnMatch[1];
+      }
+
+      if (dateMatch) {
+        document.getElementById('timestamp').textContent = dateMatch[0];
+      }
+
+      if (accountMatch) {
+        document.getElementById('account-no').textContent = accountMatch[1];
+      }
+
+      document.getElementById('sender').textContent = "Pradeep Kumar Baghel";
+
+      document.getElementById("footer-text").innerHTML =
+        `You have received ₹ <strong>${amountMatch ? amountMatch[1] : '0.00'}</strong> from <strong><em>Ipay digi Razorpay</em></strong>. Please find details below.<br>
+         If you haven't received the amount, kindly contact your bank with the <strong>Transaction ID</strong> mentioned below.`;
+
+      const scale = 3;
+      html2canvas(document.getElementById("receipt"), {
+        scale: scale,
+        useCORS: true
+      }).then(canvas => {
+        canvas.toBlob(function(blob) {
+          const item = new ClipboardItem({ 'image/png': blob });
+          navigator.clipboard.write([item]);
         });
-      }, 400);
+      });
+    }
+
+    function generateMobileNumber() {
+      const prefixes = ["9412", "9760", "9287", "6340"];
+      const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+      let suffix = '';
+      for (let i = 0; i < 6; i++) {
+        suffix += Math.floor(Math.random() * 10);
+      }
+      const fullNumber = prefix + suffix;
+      navigator.clipboard.writeText(fullNumber).catch(err => {
+        console.error('Failed to copy!', err);
+      });
     }
   </script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
