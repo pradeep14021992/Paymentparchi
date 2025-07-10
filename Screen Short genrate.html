@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cheque-Style Payment Receipt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: 'Roboto Slab', serif;
+      background-color: #fef9f0;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .receipt {
+      background-color: #fffef7;
+      border: 2px solid #0d3b66;
+      padding: 22px 28px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 8px;
+    }
+    .header {
+      font-size: 16px;
+      font-weight: 600;
+      background-color: #0d3b66;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .checkmark {
+      font-size: 28px;
+      color: #0d3b66;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 24px;
+      text-align: center;
+      margin: 0;
+      color: #096;
+    }
+    .details {
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+    .details div {
+      margin-bottom: 10px;
+    }
+    .section-label {
+      font-weight: bold;
+      margin-top: 18px;
+      font-size: 15px;
+      color: #0d3b66;
+      text-decoration: underline;
+    }
+    textarea {
+      margin-top: 25px;
+      max-width: 580px;
+      width: 100%;
+      padding: 12px;
+      font-family: 'Roboto Slab', serif;
+      font-size: 14px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      background-color: #fff;
+      color: #000;
+    }
+    .buttons {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      background-color: #0d3b66;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #09345a;
+    }
+    .footer-text {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <textarea id="transactionText" placeholder="Paste transaction details here..."></textarea>
+
+  <div class="buttons">
+    <button onclick="generateReceipt()">Generate</button>
+    <button id="downloadBtn" style="display:none;" onclick="downloadReceiptPNG()">Download PNG</button>
+  </div>
+
+  <div class="receipt" id="receipt">
+    <div class="header">Business Banking By I Pay Digi powered by RazorpayX</div>
+    <div class="checkmark">✓</div>
+    <h2>₹<span id="amount">0.00</span> RECEIVED</h2>
+
+    <div class="details">
+      <div><strong>Sender:</strong> Ai Money Tech LLP</div>
+      <div><strong>Amount:</strong> ₹<span id="amount-detail">0.00</span></div>
+      <div><strong>Status:</strong> SUCCESS</div>
+      <div><strong>Transaction ID:</strong> <span id="transaction-id">N/A</span></div>
+      <div><strong>Vendor Transaction:</strong> <span id="vendor-transaction">N/A</span></div>
+      <div><strong>Paid Via:</strong> UPI</div>
+      <div><strong>Date & Time:</strong> <span id="timestamp">N/A</span></div>
+
+      <div class="section-label">Remit payout money to beneficiary:</div>
+      <div><strong>Beneficiary:</strong> <span id="beneficiary-name">N/A</span></div>
+      <div><strong>Account Number:</strong> <span id="account-no">N/A</span></div>
+      <div><strong>IFSC:</strong> <span id="ifsc">N/A</span></div>
+    </div>
+
+    <div class="footer-text" id="footer-text"></div>
+  </div>
+
+  <script>
+    function generateReceipt() {
+      const inputText = document.getElementById('transactionText').value;
+      const lines = inputText.trim().split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      if (lines.length < 8) return;
+
+      const amount = lines[0].replace(/[^₹\d.,]/g, '');
+      const timestamp = lines[2];
+      const beneficiaryLine = lines[3];
+      const txnId = lines[5];
+      const vendorTxn = lines[7];
+
+      // Extract beneficiary details from line 4
+      const nameMatch = beneficiaryLine.match(/Name:\s*(.*?),/);
+      const accountMatch = beneficiaryLine.match(/Account number:\s*(\d+)/);
+      const ifscMatch = beneficiaryLine.match(/IFSC:\s*([A-Z0-9]+)/);
+
+      const name = nameMatch ? nameMatch[1].trim() : 'N/A';
+      const account = accountMatch ? accountMatch[1] : 'N/A';
+      const ifsc = ifscMatch ? ifscMatch[1] : 'N/A';
+
+      document.getElementById('amount').textContent = amount.replace('₹', '');
+      document.getElementById('amount-detail').textContent = amount.replace('₹', '');
+      document.getElementById('timestamp').textContent = timestamp;
+      document.getElementById('transaction-id').textContent = txnId;
+      document.getElementById('vendor-transaction').textContent = vendorTxn;
+      document.getElementById('beneficiary-name').textContent = name;
+      document.getElementById('account-no').textContent = account;
+      document.getElementById('ifsc').textContent = ifsc;
+
+      document.getElementById("footer-text").innerHTML = `
+        आपने ₹ <strong>${amount.replace('₹', '')}</strong> प्राप्त किए हैं <strong><em>Ai Money Tech LLP</em></strong> से।<br>
+        अगर राशि प्राप्त नहीं हुई हो, तो कृपया <strong>Transaction ID</strong> के साथ अपने बैंक से संपर्क करें:<br>
+        <strong>${txnId}</strong><br>
+        Vendor Transaction ID: <strong>${vendorTxn}</strong>
+      `;
+
+      const receipt = document.getElementById("receipt");
+      navigator.clipboard.writeText(receipt.innerText);
+
+      html2canvas(receipt, { scale: 3 }).then(canvas => {
+        canvas.toBlob(blob => {
+          const item = new ClipboardItem({ 'image/png': blob });
+          navigator.clipboard.write([item]);
+          window.receiptScreenshot = canvas;
+          document.getElementById('downloadBtn').style.display = 'inline-block';
+        });
+      });
+    }
+
+    function downloadReceiptPNG() {
+      if (window.receiptScreenshot) {
+        const link = document.createElement('a');
+        link.download = 'receipt.png';
+        link.href = window.receiptScreenshot.toDataURL('image/png');
+        link.click();
+      }
+    }
+  </script>
+</body>
+</html>
